@@ -15,7 +15,7 @@ router.patch(
   updateLoggedUserData
 );
 router.patch("/update-one/:id", authorization, validateObjectId,updateuser)
-router.delete("delete-me", authantication, deleteLoggedUserData)
-router.delete("delete-one/:id",authorization,validateObjectId,deleteuser)
+router.delete("/delete-me", authantication, deleteLoggedUserData)
+router.delete("/delete-one/:id",authorization,validateObjectId,deleteuser)
 
 module.exports=router
