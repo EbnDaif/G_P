@@ -20,17 +20,31 @@ exports.NewUser = asynchandler(async (req, res) => {
   await newuser.save();
   res.status(200).json({ message: "Created" });
 });
-exports.login = asynchandler(async (req, res) => {
-  const user = await User.findbycridintials(req.body.email, req.body.password);
-            const token = await user.generatetokens();
-            res.cookie("access_token", `Bearer ${token}`, {
-              httpOnly: true,
-              maxage: 1000 * 60 * 60 * 48,
-            });
-  res.status(200).send({ user, token });
-});
-exports.logout = asynchandler(async (req, res) => {
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
-  res.send({ success: true });
-});
+(
+  exports.login = asynchandler(async (req, res) => {
+  const { email, password } = req.body;
+  console.log(req.body.email);
+
+  const userExist = await User.findOne({ email: email });
+  if (!userExist)
+    return res
+      .status(400)
+      .json({
+        error:
+          "Incorrect email or password. Please check your credentials and try again",
+      });
+  const matchPassword = await userExist.comparePassword(password);
+  if (!matchPassword)
+    return res.status(400).json({
+      error:
+        "Incorrect email or password. Please check your credentials and try again",
+    });
+  const token = userExist.generatetokens();
+  res.cookie("accessToken", token, { httpOnly: true });
+  res.status(200).json({ success: true, data: userExist });
+})),
+  (exports.logout = asynchandler(async (req, res) => {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.send({ success: true });
+  }));

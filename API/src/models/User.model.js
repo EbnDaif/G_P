@@ -73,16 +73,9 @@ UserSchema.pre("save", async function () {
     user.password = await bcryptjs.hash(user.password, 8);
   }
 });
-UserSchema.statics.findbycridintials = async (em, pswd) => {
-  const user = await User.findOne({ email: em });
-  if (!user) {
-    throw new Error("Invalid email OR Password");
-  }
-  const ismatch = await bcryptjs.compare(pswd, user.password);
-  if (!ismatch) {
-    throw new Error("Invalid email OR Password");
-  }
-  return user;
+
+UserSchema.methods.comparePassword = async function (password) {
+  return bcryptjs.compare(password, this.password);
 };
 UserSchema.methods.generatetokens = async function () {
   user = this;
