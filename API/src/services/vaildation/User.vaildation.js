@@ -4,8 +4,8 @@ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 const passwordmsg =
   "TOO Weak Pssword try to add a spicial character, capital letters,small letters";
 const NewUserSchema = Joi.object({
-  firstname: Joi.string().required(),
-  lastname: Joi.string().required(),
+  firstname: Joi.string(),
+  lastname: Joi.string(),
   keywords: Joi.array().default([
     "meditation",
     "Mental health",
@@ -19,8 +19,8 @@ const NewUserSchema = Joi.object({
     .min(8)
     .required(),
   email: Joi.string().email().required(),
-  age: Joi.string().required(),
-  gender: Joi.string().valid("male", "female").required(),
+  age: Joi.string(),
+  gender: Joi.string().valid("male", "female"),
 });
 const updateUserSchema = Joi.object({
   age: Joi.number().integer().messages({
@@ -30,7 +30,7 @@ const updateUserSchema = Joi.object({
   password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
     .message(passwordmsg)
-    .min(8),
+    .min(8).required(),
   mobileNumber: Joi.number().integer().messages({
     "number.base": "Mobile number must be a valid integer.",
   }),
