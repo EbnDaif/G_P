@@ -1,5 +1,6 @@
 const User = require("../models/User.model");
 const asynchandler = require("express-async-handler");
+const ApiError = require("../utils/apiError");
 exports.NewUser = asynchandler(async (req, res) => {
   if (!req.body.keywords) {
     req.body.keywords = [
@@ -14,7 +15,8 @@ exports.NewUser = asynchandler(async (req, res) => {
      let dublicatedemail = await User.findOne({ email: data.email });
   console.log(req.body);
   if (dublicatedemail) {
-    return res.status(403).json({ Error: "this email is already taken" });
+    return next(new ApiError("this email is already taken", 403));
+
   }
   const newuser = new User(data);
   await newuser.save();
@@ -22,29 +24,24 @@ exports.NewUser = asynchandler(async (req, res) => {
 });
 (
   exports.login = asynchandler(async (req, res) => {
-  const { email, password } = req.body;
-  console.log(req.body.email);
+    try {
+      const user = await User.findByCredentials(req.body.email, req.body.password); 
 
-  const userExist = await User.findOne({ email: email });
-  if (!userExist)
-    return res
-      .status(400)
-      .json({
-        error:
-          "Incorrect email or password. Please check your credentials and try again",
+      const token = await user.generatetokens();
+
+      console.log(token);
+      res.cookie("accessToken", `Bearer ${token}`, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
       });
-  const matchPassword = await userExist.comparePassword(password);
-  if (!matchPassword)
-    return res.status(400).json({
-      error:
-        "Incorrect email or password. Please check your credentials and try again",
-    });
-  const token = userExist.generatetokens();
-  res.cookie("accessToken", token, { httpOnly: true });
-  res.status(200).json({ success: true, data: userExist });
-})),
-  (exports.logout = asynchandler(async (req, res) => {
+      res.status(200).send({ user, token });
+    } catch (error) {
+      res.status(401).send({ error: 'Invalid credentials' });
+    }
+  }))
+  
+  exports.logout = asynchandler(async (req, res) => {
     res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
     res.send({ success: true });
-  }));
+  });
+  

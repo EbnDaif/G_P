@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Articles = require("../models/Articles.model");
 const handler = require("./actionHandler");
+const ApiError = require("../utils/apiError");
 
 exports.GetAllArticles = handler.getall(Articles);
 exports.getarticle = handler.getone(Articles)
@@ -17,10 +18,8 @@ exports.createArticle= asyncHandler(async (req, res) => {
     });
 
 		if (!newArticle) {
-			return res.status(400).json({
-				success: false,
-				message: 'Something went wrong while create article',
-			});
+			
+			return next(new ApiError(`Something went wrong while create article`, 400));
 		}
 
 		const savedArticle = await newArticle.save();

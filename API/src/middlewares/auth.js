@@ -3,10 +3,12 @@ const User = require("../models/User.model");
 const asynchandler = require("express-async-handler");
 
 exports.authantication = asynchandler(async (req, res, next) => {
-  if (!req.cookies) {
+ console.log(req.cookies);
+  if (!req.cookies || !req.cookies.accessToken) {
+
     return res.status(401).send({ Message: "unauthorized user" });
   }
-  const token = req.cookies.access_token.split(" ")[1];
+  const token = req.cookies.accessToken.split(" ")[1];
   const secret_key = process.env.SALT;
 
   const Valid = jwt.verify(token, secret_key);

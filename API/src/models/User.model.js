@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const { string } = require("joi");
+const ApiError = require("../utils/apiError");
 const UserSchema = mongoose.Schema({
   firstname: {
     type: String,
@@ -70,18 +71,30 @@ UserSchema.pre("save", async function () {
     user.password = await bcryptjs.hash(user.password, 8);
   }
 });
+UserSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('Invalid credentials');
+  }
 
-UserSchema.methods.comparePassword = async function (password) {
-  return bcryptjs.compare(password, this.password);
+  const isMatch = await bcryptjs.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error('Invalid credentials');
+  }
+
+  return user;
 };
+
 UserSchema.methods.generatetokens = async function () {
-  user = this;
-  const secret_key = process.env.SALT;
-  const token = jwt.sign({ _id: user._id.toString() }, secret_key);
-  user.tokens = user.tokens.concat(token);
-  await user.save();
+  const user = this
+  const secret_key=process.env.SALT
+    const token = jwt.sign({ _id: user._id.toString() }, secret_key)
+
+  user.tokens = user.tokens.concat(token)
+  
+   await user.save()
   return token;
-};
+}
 UserSchema.methods.toJson = function () {
   const user = this;
   const userobj = user.toObject();
