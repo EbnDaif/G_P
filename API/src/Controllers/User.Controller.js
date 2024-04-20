@@ -15,7 +15,6 @@ exports.updateuser = asyncHandler(async (req, res, next) => {
         lastname: req.body.lastname,
         email: req.body.email,
         age: req.body.age,
-        phone: req.body.phone,
         password: req.body.password,
       },
       { new: true }
@@ -28,7 +27,6 @@ exports.updateuser = asyncHandler(async (req, res, next) => {
         lastname: req.body.lastname,
         email: req.body.email,
         age: req.body.age,
-        phone: req.body.phone,
       },
       { new: true }
     );

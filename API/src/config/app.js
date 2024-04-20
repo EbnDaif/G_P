@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const ApiError = require("../utils/apiError");
 
 const cors = require("cors");
 const cookieparser = require("cookie-parser");
@@ -11,15 +12,26 @@ const corsOptions = {
 
 app.use(cookieparser());
 app.use(express.json());
-app.use("/GP", require("../Routers/Routers"));
 app.use(cors(corsOptions));
-app.get("/", (req, res) => {
+app.use("/GP", require("../Routers/Routers"));
+
+// Error handler middleware (must be placed at the end)
+const errorHandler = (err, req, res, next) => {
+  if (err instanceof ApiError) {
+    res.status(err.statuscode).json({ error: err.message });
+  } else {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+app.use(errorHandler);
+
+// Example route handler with error throwing
+app.get("/", (req, res, next) => {
   try {
-    //test error
+    // Test error
     throw new Error("error");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    next(err); // Pass the error to the error handling middleware
   }
 });
 
