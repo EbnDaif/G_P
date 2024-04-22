@@ -19,7 +19,7 @@ router.patch(
 );
     router.post(
       "/forget-password",
-      validationMiddleware(resetPasswordSchema),
+      validationMiddleware(forgetPasswordSchema),
       forgetPassword
     );
 router.post(
