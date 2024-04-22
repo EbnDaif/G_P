@@ -20,12 +20,9 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     res.status(err.statuscode).json({ error: err.message });
   } else {
-    res
-      .status(500)
-      .json({ error: "Internal Server Error", message: err.message });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 app.use(errorHandler);
 
 // Example route handler with error throwing
@@ -39,3 +36,4 @@ app.get("/", (req, res, next) => {
 });
 
 module.exports = app;
+
