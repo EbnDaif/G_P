@@ -28,9 +28,7 @@ app.use(errorHandler);
 // Example route handler with error throwing
 app.get("/", (req, res, next) => {
   try {
-    // Test error
-    throw new Error("error000000000000000000");
-    
+res.send("Rourte '/' is accsesed");
   } catch (err) {
     console.log(err)
     next(err); // Pass the error to the error handling middleware
