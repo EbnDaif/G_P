@@ -60,6 +60,14 @@ const UserSchema = mongoose.Schema({
       type: String,
     },
   ],
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
   isAdmin: {
     type: Boolean,
     default: false,
@@ -95,12 +103,15 @@ UserSchema.methods.generatetokens = async function () {
    await user.save()
   return token;
 }
-UserSchema.methods.toJson = function () {
+UserSchema.methods.toJSON = function () {
   const user = this;
-  const userobj = user.toObject();
-  delete userobj.password;
-  delete userobj.tokens;
-  return userobj;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+  delete userObject.resetPasswordExpires;
+  delete userObject.resetPasswordToken;
+  return userObject;
 };
+
 const User = mongoose.model("User", UserSchema);
 module.exports = User;

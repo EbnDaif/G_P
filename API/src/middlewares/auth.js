@@ -5,9 +5,12 @@ const asynchandler = require("express-async-handler");
 exports.authantication = asynchandler(async (req, res, next) => {
  console.log(req.cookies);
   if (!req.cookies || !req.cookies.accessToken) {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    console.log(baseUrl);
 
     return res.status(401).send({ Message: "unauthorized user" });
   }
+
   const token = req.cookies.accessToken.split(" ")[1];
   const secret_key = process.env.SALT;
 

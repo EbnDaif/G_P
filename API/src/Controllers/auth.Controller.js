@@ -26,8 +26,6 @@ exports.NewUser = asynchandler(async (req, res,next) => {
   res.status(200).json({ message: "Created" });
   }
   else {
-  console.log("55555555555555555555555555");
-
     return next( new ApiError("this email is already taken", 403));
   }
 
@@ -47,7 +45,7 @@ exports.NewUser = asynchandler(async (req, res,next) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
       });
-      res.status(200).send({ user, token });
+      res.status(200).send({ user });
     } catch (error) {
       logger.error(error.message);
 
