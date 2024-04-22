@@ -30,8 +30,9 @@ app.get("/", (req, res, next) => {
   try {
     // Test error
     throw new Error("error000000000000000000");
+    
   } catch (err) {
-    console.loglog(err)
+    console.log(err)
     next(err); // Pass the error to the error handling middleware
   }
 });
