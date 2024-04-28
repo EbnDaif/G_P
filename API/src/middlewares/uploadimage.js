@@ -3,7 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const fs = require("fs");
 
-const destinations = ["atricles", "users"];
+const destinations = ["articles", "users"];
+
 function make_folders(dest) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest);
@@ -12,22 +13,22 @@ function make_folders(dest) {
     console.log(`Folder already exists at: ${dest}`);
   }
 }
+
 const storageEngine = multer.diskStorage({
-  destination: async function (req, file, callback) {
+  destination: function (req, file, callback) {
     let dest = "src/uploads/";
-    await make_folders(dest);
+    make_folders(dest);
     switch (req.baseUrl) {
       case "/GP/users":
         dest = "src/uploads/users";
-        await make_folders(dest);
+        make_folders(dest);
         break;
       case "/GP/article":
         dest = "src/uploads/articles";
-        await make_folders(dest);
-
+        make_folders(dest);
         break;
       default:
-        dest = "uploads";
+        dest = "src/uploads/";
     }
     callback(null, dest);
   },
@@ -37,8 +38,9 @@ const storageEngine = multer.diskStorage({
     callback(null, `${Date.now()}--${uuidv4()}--${name}`);
   },
 });
+
 const checkFileType = function (file, callback) {
-  const fileTypes = /jpeg|jpg|png|gif|svg|mp4/;
+  const fileTypes = /jpeg|jpg|png|gif|svg/;
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = fileTypes.test(file.mimetype);
   if (mimeType && extName) {
@@ -47,6 +49,7 @@ const checkFileType = function (file, callback) {
     callback("Error: You can Only Upload Images!!");
   }
 };
+
 const upload = multer({
   storage: storageEngine,
   limits: { fileSize: 10000000 },
@@ -54,4 +57,5 @@ const upload = multer({
     checkFileType(file, callback);
   },
 });
+
 module.exports = { upload };
