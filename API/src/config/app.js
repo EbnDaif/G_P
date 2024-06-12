@@ -4,15 +4,17 @@ const ApiError = require("../utils/apiError");
 
 const cors = require("cors");
 const cookieparser = require("cookie-parser");
-const corsOptions = {
+/*const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
-};
+};*/
+
+
 
 app.use(cookieparser());
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use("/GP", require("../Routers/Routers"));
 
 // Error handler middleware (must be placed at the end)

@@ -23,7 +23,7 @@ const storageEngine = multer.diskStorage({
         dest = "src/uploads/users";
         make_folders(dest);
         break;
-      case "/GP/article":
+      case "/GP/articles":
         dest = "src/uploads/articles";
         make_folders(dest);
         break;

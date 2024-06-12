@@ -18,8 +18,6 @@ const newArticleValidation = Joi.object({
     "any.required": "Please provide a content for this Article",
   }),
 
-  cover: Joi.string().required(),
-
   publish_date: Joi.date().default(Date.now()),
 
   // publish_by: Joi.string()

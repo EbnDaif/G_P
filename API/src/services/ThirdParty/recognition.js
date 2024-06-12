@@ -9,7 +9,7 @@ async function uploadImagesAndGetFeatureVectors(file) {
     formData.append("files", blob, file.filename);
 
     const response = await axios.post(
-      "https://fastapi-sc2o.onrender.com/predict",
+      "http://127.0.0.1:8000/predict",
       formData,
       {
         headers: {
@@ -27,7 +27,7 @@ async function uploadImagesAndGetFeatureVectors(file) {
 async function calculateCosineSimilarity(vector1, vector2) {
   try {
     const response = await axios.post(
-      "https://fastapi-sc2o.onrender.com/calculate_similarity",
+      "http://127.0.0.1:8000/calculate_similarity",
       {
         vector1,
         vector2,

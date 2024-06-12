@@ -1,45 +1,50 @@
-// server.js
-const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-const mongoose = require("mongoose");
-const messageController = require("./controllers/messageController");
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+const axios = require("axios");
 
-// Handle incoming socket connections
-io.on("connection", (socket) => {
-  console.log("A user connected");
+async function sendMessage(req, res) {
+  try {
+    const { question } = req.body;
+    const sessionId = req.user._id;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-  // Handle incoming messages from the user
-  socket.on("userMessage", async (data) => {
-    try {
-      // Save the user's message to the database
-      const userMessage = await messageController.saveUserMessage(data);
+    const data = {
+      question,
+      overrideConfig: {
+        sessionId,
+      },
+    };
 
-      // Simulate AI chatbot response
-      const aiResponse =
-        "AI: Thank you for your message. I will get back to you shortly.";
+    // Send the message to the specified endpoint
+    const response = await axios.post(
+      "https://qamxrrxn.cloud.sealos.io/api/v1/prediction/3eadea6e-3b80-4267-8305-ce94ae2e955a",
+      data,
+      config
+    );
 
-      // Save the chatbot's response to the database
-      const aiMessage = await messageController.saveChatbotMessage(aiResponse);
+    // Send the response back to the client
+    res
+      .status(200)
+      .json({ message: "Message sent successfully", response: response.data });
+  } catch (err) {
+    console.error("Error sending message:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 
-      // Emit the AI chatbot response to the user
-      socket.emit("chatbotMessage", aiResponse);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+/*
+async function getMessages(req, res) {
+  try {
+    const messages = await Message.find().sort({ timestamp: 1 });
 
-  // Handle disconnection
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
-  });
-});
-
-// Start the server
-server.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
+    res.status(200).json(messages);
+  } catch (err) {
+    console.error("Error getting messages:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+*/
+module.exports = { sendMessage };

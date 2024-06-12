@@ -63,6 +63,7 @@ exports.NewUser = asynchandler(async (req, res,next) => {
   // Register user middleware
 exports.registerUser = asynchandler(async (req, res, next) => {
   try {
+    console.log(req.file);
     const { email } = req.body;
     const feature_vectors = await fastapi.uploadImagesAndGetFeatureVectors(
       req.file
@@ -87,11 +88,12 @@ exports.registerUser = asynchandler(async (req, res, next) => {
 
 
 exports.authenticateUser = async (req, res, next) => {
+  console.log(req.file);
   try {
     const detectedDescriptors = await fastapi.uploadImagesAndGetFeatureVectors(
       req.file
     );
-    console.log(detectedDescriptors);
+    console.log(detectedDescriptors[0]);
     const preRegisteredUsers = await User.find(
       { feature_vectors: { $exists: true, $ne: null } },
       "feature_vectors"
@@ -104,13 +106,14 @@ exports.authenticateUser = async (req, res, next) => {
         const faceDescriptors = Array.isArray(user.feature_vectors)
           ? user.feature_vectors
           : [user.feature_vectors];
-
+        console.log();
         for (const preRegisteredDescriptor of faceDescriptors) {
           try {
             const similarity = await fastapi.calculateCosineSimilarity(
-              preRegisteredDescriptor[0],
-              detectedDescriptor[0]
+              preRegisteredDescriptor,
+              detectedDescriptor
             );
+            console.log(detectedDescriptor);
             if (similarity[1]) {
               console.log(similarity[0]);
               authenticatedUser = user;
@@ -156,3 +159,40 @@ exports.authenticateUser = async (req, res, next) => {
 
 
 
+exports.similarity = asynchandler(async (req, res, next) => {
+  // Fetch all images
+  const user = await User.find();
+
+  // Extract feature vectors from images
+  const featureVectors = user.map((image) => user.featureVector);
+
+  const similarityResults = [];
+      //const vector1 = await ;
+
+  // Compare each vector with every other vector
+  for (let i = 0; i < featureVectors.length; i++) {
+    for (let j = i + 1; j < featureVectors.length; j++) {
+      const vector2 = featureVectors[j];
+
+      // Call the function to calculate similarity
+      const { similarity_score, result } = await callCosineSimilarityEndpoint(
+        vector1,
+        vector2
+      );
+
+      // Debugging: Log similarity score
+      console.log(
+        `Similarity Score between vector ${i} and vector ${j}:`,
+        similarity_score
+      );
+
+      // Store the similarity score and indices of vectors
+      similarityResults.push({
+        similarity_score: similarity_score,
+      });
+    }
+  }
+
+  // Send response
+  res.status(200).json({ similarity_results: similarityResults });
+});

@@ -13,7 +13,6 @@ router.post(
   authorization,
   upload.single("cover"),
   validationMiddleware(newArticleValidation),
-
   createArticle,
 );
 router.get("/getall", GetAllArticles);
