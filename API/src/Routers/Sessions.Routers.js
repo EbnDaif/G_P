@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const sessionController = require("../Controllers/Session.Controllers");
+const { authantication, authorization } = require("../middlewares/auth");
 
 // Create a new session
-router.post("/", sessionController.createSession);
+router.post("/create", authantication, sessionController.createSession);
 
 // Get all sessions
-router.get("/", sessionController.getAllSessions);
+router.get("/all",authorization, sessionController.getAllSessions);
+router.get("/current", authantication, sessionController.getUserSessions);
+
 
 // Get a session by ID
 router.get("/:id", sessionController.getSessionById);

@@ -7,6 +7,7 @@
      type: String,
      required: [true, "please provide the article category"],
      trim: true,
+     unique:true
    },
    content: {
      type: String,

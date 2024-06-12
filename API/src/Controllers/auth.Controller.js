@@ -43,7 +43,6 @@ exports.NewUser = asynchandler(async (req, res,next) => {
 
       const token = await user.generatetokens();
 
-      console.log(token);
       res.cookie("accessToken", `Bearer ${token}`, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
@@ -63,7 +62,6 @@ exports.NewUser = asynchandler(async (req, res,next) => {
   // Register user middleware
 exports.registerUser = asynchandler(async (req, res, next) => {
   try {
-    console.log(req.file);
     const { email } = req.body;
     const feature_vectors = await fastapi.uploadImagesAndGetFeatureVectors(
       req.file

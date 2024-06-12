@@ -26,12 +26,20 @@ const updateUserSchema = Joi.object({
   age: Joi.number().integer().messages({
     "number.base": "Age must be a valid integer.",
   }),
-
+  firstname: Joi.string(),
+  lastname: Joi.string(),
+  keywords: Joi.array().default([
+    "meditation",
+    "Mental health",
+    "relax",
+    "motivation",
+    "calm",
+  ]),
   password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
     .message(passwordmsg)
-    .min(8).required(),
-  mobileNumber: Joi.number().integer().messages({
+    .min(8),
+    mobileNumber: Joi.number().integer().messages({
     "number.base": "Mobile number must be a valid integer.",
   }),
 });

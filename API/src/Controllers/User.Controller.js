@@ -47,21 +47,16 @@ exports.getloggeduser = asyncHandler(async (req, res, next) => {
 });
 exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-    },
+    req.user._id,req.body,
     { new: true }
   );
 
   res.status(200).json({ data: updatedUser });
 });
 exports.deleteLoggedUserData = asyncHandler(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user._id);
+  await User.findByIdAndDelete(req.user._id);
 
-  res.status(204).json({ status: "Success" });
+  res.status(200).json({ status: "Success" });
 });
 exports.forgetPassword = asyncHandler(async (req, res, next) => {
   if (!req.body.email) {

@@ -5,10 +5,16 @@ const ApiError = require("../utils/apiError");
 
 exports.GetAllArticles = handler.getall(Articles);
 exports.getarticle = handler.getone(Articles)
-exports.createArticle= asyncHandler(async (req, res) => {
+exports.createArticle= asyncHandler(async (req, res,next) => {
 		if (req.file) {
 			req.body.cover = `/articles/${req.file.filename}`;
-		}
+	}
+	console.log(req.body.title);
+	dublicatedarticle = await Articles.findOne({ title: req.body.title })
+	console.log(dublicatedarticle);
+	if (dublicatedarticle) {
+            return next(new ApiError("dublicated article", 400));
+  }
 
 		const newArticle = new Articles({
       ...req.body,
