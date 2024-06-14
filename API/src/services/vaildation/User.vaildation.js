@@ -13,6 +13,7 @@ const NewUserSchema = Joi.object({
     "motivation",
     "calm",
   ]),
+
   password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
     .message(passwordmsg)
@@ -35,11 +36,13 @@ const updateUserSchema = Joi.object({
     "motivation",
     "calm",
   ]),
+  preferance: Joi.array(),
+
   password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
     .message(passwordmsg)
     .min(8),
-    mobileNumber: Joi.number().integer().messages({
+  mobileNumber: Joi.number().integer().messages({
     "number.base": "Mobile number must be a valid integer.",
   }),
 });

@@ -4,6 +4,7 @@ const handler = require("./actionHandler");
 const ApiError = require("../utils/apiError");
 const jwt = require("jsonwebtoken");
 const { sendEmail } = require("../utils/nodemailer");
+const { log } = require("winston");
 exports.getusers = handler.getall(User);
 exports.getuser = handler.getone(User);
 exports.createuser = handler.createone(User);
@@ -85,7 +86,7 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
 
   }
   
-
+  console.log(resetUrl);
 
   const emailContent = `Click the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`;
   await sendEmail({

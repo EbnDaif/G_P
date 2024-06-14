@@ -3,10 +3,10 @@ const asynchandler = require("express-async-handler");
 const fastapi = require("../services/ThirdParty/recognition");
 
 const ApiError = require("../utils/apiError");
-const loggerEvent = require('../services/logger.services');
+const loggerEvent = require("../services/logger.services");
 const { log } = require("winston");
-const logger = loggerEvent('auth')
-exports.NewUser = asynchandler(async (req, res,next) => {
+const logger = loggerEvent("auth");
+exports.NewUser = asynchandler(async (req, res, next) => {
   if (!req.body.keywords) {
     req.body.keywords = [
       "meditation",
@@ -16,50 +16,70 @@ exports.NewUser = asynchandler(async (req, res,next) => {
       "calm",
     ];
   }
-      const data = req.body;
-      logger.info(req.body)
+  const data = req.body;
+  logger.info(req.body);
 
   let dublicatedemail = await User.findOne({ email: data.email });
-  
+
   if (!dublicatedemail) {
- 
-  const newuser = new User(data);
-  await newuser.save();
-  logger.info("created email")
-  res.status(200).json({ message: "Created" });
+    const newuser = new User(data);
+    await newuser.save();
+    logger.info("created email");
+    res.status(200).json({ message: "Created" });
+  } else {
+    return next(new ApiError("this email is already taken", 403));
   }
-  else {
-    return next( new ApiError("this email is already taken", 403));
-  }
-
-
 });
-(
-  exports.login = asynchandler(async (req, res) => {
-    try {
-      logger.info(req.body)
+exports.login = asynchandler(async (req, res) => {
+  try {
+    logger.info(req.body);
 
-      const user = await User.findByCredentials(req.body.email, req.body.password); 
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
 
-      const token = await user.generatetokens();
+    const token = await user.generatetokens();
 
-      res.cookie("accessToken", `Bearer ${token}`, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
-      });
-      res.status(200).send({ user });
-    } catch (error) {
-      logger.error(error.message);
+    res.cookie("accessToken", `Bearer ${token}`, {
+      httpOnly: true,
+      //  maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
+    });
+    res.status(200).send({ user });
+  } catch (error) {
+    logger.error(error.message);
 
-      res.status(401).send({ error: 'Invalid credentials' });
-    }
-  }))
-  
-  exports.logout = asynchandler(async (req, res) => {
-    res.clearCookie("accessToken");
-    res.send({ success: true });
-  });
-  // Register user middleware
+    res.status(401).send({ error: "Invalid credentials" });
+  }
+});
+exports.logingoogle = asynchandler(async (req, res) => {
+  try {
+    logger.info(req.body);
+
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+
+    const token = await user.generatetokens();
+
+    res.cookie("accessToken", `Bearer ${token}`, {
+      httpOnly: true,
+      //  maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
+    });
+    res.status(200).send({ user });
+  } catch (error) {
+    logger.error(error.message);
+
+    res.status(401).send({ error: "Invalid credentials" });
+  }
+});
+
+exports.logout = asynchandler(async (req, res) => {
+  res.clearCookie("accessToken");
+  res.send({ success: true });
+});
+// Register user middleware
 exports.registerUser = asynchandler(async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -83,7 +103,6 @@ exports.registerUser = asynchandler(async (req, res, next) => {
     return next(error);
   }
 });
-
 
 exports.authenticateUser = async (req, res, next) => {
   console.log(req.file);
@@ -117,9 +136,8 @@ exports.authenticateUser = async (req, res, next) => {
               authenticatedUser = user;
               break;
             } else {
-                            authenticatedUser = null
-}
-            
+              authenticatedUser = null;
+            }
           } catch (error) {
             logger.error("Error calculating cosine similarity:", error);
           }
@@ -136,16 +154,16 @@ exports.authenticateUser = async (req, res, next) => {
     }
 
     if (authenticatedUser) {
-     const user = await User.findById(authenticatedUser._id);
+      const user = await User.findById(authenticatedUser._id);
       const token = await user.generatetokens();
 
       return res
-        .status(200).cookie("accessToken", `Bearer ${token}`, {
+        .status(200)
+        .cookie("accessToken", `Bearer ${token}`, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
         })
-        .json({ authenticated: true, name: authenticatedUser })
-        
+        .json({ authenticated: true, name: authenticatedUser });
     } else {
       return res.status(200).json({ authenticated: false });
     }
@@ -155,8 +173,6 @@ exports.authenticateUser = async (req, res, next) => {
   }
 };
 
-
-
 exports.similarity = asynchandler(async (req, res, next) => {
   // Fetch all images
   const user = await User.find();
@@ -165,7 +181,7 @@ exports.similarity = asynchandler(async (req, res, next) => {
   const featureVectors = user.map((image) => user.featureVector);
 
   const similarityResults = [];
-      //const vector1 = await ;
+  //const vector1 = await ;
 
   // Compare each vector with every other vector
   for (let i = 0; i < featureVectors.length; i++) {
