@@ -10,8 +10,6 @@ const cookieparser = require("cookie-parser");
   optionSuccessStatus: 200,
 };*/
 
-
-
 app.use(cookieparser());
 app.use(express.json());
 app.use(cors());
@@ -22,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     res.status(err.statuscode).json({ error: err.message });
   } else {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err });
   }
 };
 app.use(errorHandler);
@@ -30,13 +28,11 @@ app.use(errorHandler);
 // Example route handler with error throwing
 app.get("/", (req, res, next) => {
   try {
-res.send("Rourte '/' is accsesed");
+    res.send("Rourte '/' is accsesed");
   } catch (err) {
-    console.log(err)
+    console.log(err);
     next(err); // Pass the error to the error handling middleware
   }
 });
 
-
 module.exports = app;
-
