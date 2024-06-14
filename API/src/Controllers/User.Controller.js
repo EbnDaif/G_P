@@ -70,7 +70,7 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new ApiError("User not found", 404));
   }
-
+  console.log(process.env.RESET_PASSWORD_SALT);
   const token = jwt.sign({ _id: user._id }, process.env.RESET_PASSWORD_SALT, {
     expiresIn: "10m",
   });
@@ -84,7 +84,6 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
   if (req.hostname === "localhost" || req.hostname === "127.0.0.1") {
     resetUrl = `${baseUrl}/GP/user/reset-password/${token}`;
   }
-
 
   const emailContent = `Click the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`;
   await sendEmail({
