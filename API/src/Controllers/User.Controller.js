@@ -3,6 +3,7 @@ const User = require("../models/User.model");
 const handler = require("./actionHandler");
 const ApiError = require("../utils/apiError");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const { sendEmail } = require("../utils/nodemailer");
 const { log } = require("winston");
 exports.getusers = handler.getall(User);

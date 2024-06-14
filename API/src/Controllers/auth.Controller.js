@@ -30,6 +30,30 @@ exports.NewUser = asynchandler(async (req, res, next) => {
     return next(new ApiError("this email is already taken", 403));
   }
 });
+exports.NewUserGoogle = asynchandler(async (req, res, next) => {
+  if (!req.body.keywords) {
+    req.body.keywords = [
+      "meditation",
+      "Mental health",
+      "relax",
+      "motivation",
+      "calm",
+    ];
+  }
+  const data = req.body;
+  logger.info(req.body);
+
+  let dublicatedemail = await User.findOne({ email: data.email });
+
+  if (!dublicatedemail) {
+    const newuser = new User(data);
+    await newuser.save();
+    logger.info("created email");
+    res.status(200).json({ message: "Created" });
+  } else {
+    return next(new ApiError("this email is already taken", 403));
+  }
+});
 exports.login = asynchandler(async (req, res) => {
   try {
     logger.info(req.body);
@@ -58,7 +82,7 @@ exports.logingoogle = asynchandler(async (req, res) => {
 
     const user = await User.findByCredentials(
       req.body.email,
-      req.body.password
+      req.body.UID
     );
 
     const token = await user.generatetokens();

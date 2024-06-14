@@ -28,6 +28,8 @@ const UserSchema = mongoose.Schema({
     type: String,
     minlength: 8,
   },
+  UID: { type: String },
+  
   preferance: [{ type: String, trim: true }],
   profileimage: String,
   moood: [
