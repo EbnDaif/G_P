@@ -41,16 +41,15 @@ exports.updateuser = asyncHandler(async (req, res, next) => {
 exports.deleteuser = handler.deleteone(User);
 exports.getloggeduser = asyncHandler(async (req, res, next) => {
   const user = req.user;
-    const userobj = user.toObject();
-    delete userobj.password;
-    delete userobj.tokens;
-  res.json({"user":userobj});
+  const userobj = user.toObject();
+  delete userobj.password;
+  delete userobj.tokens;
+  res.json({ user: userobj });
 });
 exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user._id,req.body,
-    { new: true }
-  );
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
+    new: true,
+  });
 
   res.status(200).json({ data: updatedUser });
 });
@@ -79,13 +78,12 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   const baseUrl = `${req.protocol}://${req.get("host")}`;
-  let resetUrl = `${baseUrl}/user/reset-password/${token}`;
+  let resetUrl = `https://g-p-1k1q.onrender.com/GP/user/reset-password/${token}`;
 
   if (req.hostname === "localhost" || req.hostname === "127.0.0.1") {
-   resetUrl = `${baseUrl}/GP/user/reset-password/${token}`;
-
+    resetUrl = `${baseUrl}/GP/user/reset-password/${token}`;
   }
-  
+
   console.log(resetUrl);
 
   const emailContent = `Click the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`;
