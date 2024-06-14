@@ -84,7 +84,6 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
     resetUrl = `${baseUrl}/GP/user/reset-password/${token}`;
   }
 
-  console.log(resetUrl);
 
   const emailContent = `Click the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`;
   await sendEmail({

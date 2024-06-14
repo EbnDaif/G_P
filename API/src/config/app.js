@@ -20,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     res.status(err.statuscode).json({ error: err.message });
   } else {
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
 };
 app.use(errorHandler);
