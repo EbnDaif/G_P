@@ -1,11 +1,35 @@
 const Session = require("../models/Session.model");
 const asyncHandler = require("express-async-handler");
 
-// Create a new session
-const createSession = asyncHandler(async (req, res) => {
-  const session = new Session(req.body);
-  await session.save();
-  res.status(201).json(session);
+// Create new sessions (accepts a single session or an array of sessions)
+const createSessions = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const sessions = req.body;
+
+  // Check if input is an array
+  if (Array.isArray(sessions)) {
+    // Add owner to each session object
+    const sessionsWithOwner = sessions.map((session) => ({
+      ...session,
+      owner: userId,
+    }));
+
+    // Save all sessions if input is an array
+    const createdSessions = await Session.insertMany(sessionsWithOwner);
+    return res.status(201).json(createdSessions);
+  }
+
+  // Check if input is a single object
+  if (typeof sessions === "object" && sessions !== null) {
+    const session = new Session({ ...sessions, owner: userId });
+    const createdSession = await session.save();
+    return res.status(201).json(createdSession);
+  }
+
+  // If input is neither an array nor an object, return an error
+  return res.status(400).json({
+    message: "Input should be a session object or an array of sessions",
+  });
 });
 
 // Get all sessions
@@ -44,15 +68,14 @@ const deleteSessionById = asyncHandler(async (req, res) => {
 });
 // Get sessions for the current user
 const getUserSessions = asyncHandler(async (req, res) => {
-  const userId = req.user.id; // Assuming the user ID is added to req.user by authentication middleware
-  const sessions = await Session.find({ userId: userId });
+  const userId = req.user._id;
+  const sessions = await Session.find({ owner: userId });
+
   res.status(200).json(sessions);
 });
 
-
-
 module.exports = {
-  createSession,
+  createSessions,
   getAllSessions,
   getSessionById,
   updateSessionById,

@@ -23,6 +23,23 @@ const NewUserSchema = Joi.object({
   age: Joi.string(),
   gender: Joi.string().valid("male", "female"),
 });
+const NewUsergoogleSchema = Joi.object({
+  firstname: Joi.string(),
+  lastname: Joi.string(),
+  keywords: Joi.array().default([
+    "meditation",
+    "Mental health",
+    "relax",
+    "motivation",
+    "calm",
+  ]),
+
+
+  UID: Joi.string().required(),
+  email: Joi.string().email().required(),
+  age: Joi.string(),
+  gender: Joi.string().valid("male", "female"),
+});
 const updateUserSchema = Joi.object({
   age: Joi.number().integer().messages({
     "number.base": "Age must be a valid integer.",
@@ -55,6 +72,11 @@ const loginSchema = Joi.object({
   }),
   email: Joi.string().email().required(),
 });
+const logingoogleSchema = Joi.object({
+
+  email: Joi.string().email().required(),
+  UID: Joi.string().required(),
+});
 
 const forgetPasswordSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -71,7 +93,9 @@ const resetPasswordSchema = Joi.object({
 
 module.exports = {
   NewUserSchema: NewUserSchema,
+  NewUsergoogleSchema: NewUsergoogleSchema,
   loginSchema: loginSchema,
+  logingoogleSchema: logingoogleSchema,
   updateUserSchema: updateUserSchema,
   forgetPasswordSchema: forgetPasswordSchema,
   resetPasswordSchema:resetPasswordSchema

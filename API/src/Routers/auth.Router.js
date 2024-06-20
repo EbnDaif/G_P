@@ -2,11 +2,14 @@ const {
   login,
   NewUser,
   logout,
-  authenticateUser,
+  logingoogle,
   registerUser,
   similarity,
+  NewUserGoogle,
 } = require("../Controllers/auth.Controller");
 const {
+  NewUsergoogleSchema,
+  logingoogleSchema,
   NewUserSchema,
   loginSchema,
 } = require("../services/vaildation/User.vaildation");
@@ -20,7 +23,18 @@ router.post(
   validationMiddleware(NewUserSchema),
   NewUser
 );
+router.post(
+  "/registergoogle",
+  validationMiddleware(NewUserGoogle),
+  NewUserGoogle
+);
 router.post("/login", validationMiddleware(loginSchema), login);
+
+router.post(
+  "/logingoogle",
+  validationMiddleware(logingoogleSchema),
+  logingoogle
+);
 router.post("/face/register", upload.single("image"), registerUser);
 
 router.post("/face/authenticate", similarity);

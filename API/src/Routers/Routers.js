@@ -5,6 +5,6 @@ router.use("/user", require("./user.Router"))
 router.use("/videos", require("./Videos.Router"));
 router.use("/logs", require("./downloadLogs.Router"));
 router.use("/chat", require('./Chat.router'));
-router.use("/session", require("./Sessions.Routers"));
+router.use("/sessions", require("./Sessions.Routers"));
 
 module.exports = router;
