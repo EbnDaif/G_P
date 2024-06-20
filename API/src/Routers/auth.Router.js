@@ -25,7 +25,7 @@ router.post(
 );
 router.post(
   "/registergoogle",
-  validationMiddleware(NewUserGoogle),
+  validationMiddleware(NewUsergoogleSchema),
   NewUserGoogle
 );
 router.post("/login", validationMiddleware(loginSchema), login);

@@ -79,8 +79,8 @@ exports.login = asynchandler(async (req, res) => {
 exports.logingoogle = asynchandler(async (req, res) => {
   try {
     logger.info(req.body);
-
-    const user = await User.findByCredentials(
+console.log(req.body);
+    const user = await User.findByUIDCredentials(
       req.body.email,
       req.body.UID
     );

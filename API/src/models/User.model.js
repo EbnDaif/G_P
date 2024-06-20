@@ -79,7 +79,12 @@ UserSchema.pre("save", async function () {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcryptjs.hash(user.password, 8);
-  }
+  } 
+  
+  if ( user.isModified("UID")) {
+    user.UID = await bcryptjs.hash(user.UID, 8);
+  } 
+
 });
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
@@ -94,7 +99,19 @@ UserSchema.statics.findByCredentials = async (email, password) => {
 
   return user;
 };
+UserSchema.statics.findByUIDCredentials = async (email, UID) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Invalid credentials");
+  }
 
+  const isMatch = await bcryptjs.compare(UID, user.UID);
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+
+  return user;
+};
 UserSchema.methods.generatetokens = async function () {
   const user = this
   const secret_key=process.env.SALT
@@ -112,6 +129,7 @@ UserSchema.methods.toJSON = function () {
   delete userObject.tokens;
   delete userObject.resetPasswordExpires;
   delete userObject.resetPasswordToken;
+  delete userObject.UID;
   return userObject;
 };
 
