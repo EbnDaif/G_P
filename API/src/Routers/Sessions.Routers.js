@@ -4,13 +4,19 @@ const sessionController = require("../Controllers/Session.Controllers");
 const { validationMiddleware } = require("../middlewares/validator");
 const {
   newsessionValidation,
-  updatesessionValidation,
+  updatesessionValidation,newmultisessionValidation
 } = require("../services/vaildation/Session.validation");
 const { authantication, authorization } = require("../middlewares/auth");
 // Create a new session
 router.post(
   "/create",
   validationMiddleware(newsessionValidation),
+  authantication,
+  sessionController.createSessions
+);
+router.post(
+  "/createmulti",
+  validationMiddleware(newmultisessionValidation),
   authantication,
   sessionController.createSessions
 );

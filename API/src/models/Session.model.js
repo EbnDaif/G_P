@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const sessionSchema = new Schema(
-  {
+  {name:{type:String},
     owner: {
       type: mongoose.Types.ObjectId,
       required: true,
@@ -23,7 +23,7 @@ const sessionSchema = new Schema(
     ],
     appTime: { type: String, required: true }, // Consider changing to Number or Date if it represents time
     chatTime: String, // Consider changing to Number or Date if it represents time
-    videosTime: String, // Consider changing to Number or Date if it represents time
+    videostime: String, // Consider changing to Number or Date if it represents time
   },
   { timestamps: true }
 );
