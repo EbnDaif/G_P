@@ -32,4 +32,4 @@ router.delete("/delete-me", authantication, deleteLoggedUserData)
 router.delete("/delete-one/:id",authorization,validateObjectId,deleteuser)
 
 module.exports=router
-  
+ 
