@@ -17,6 +17,7 @@ exports.NewUser = asynchandler(async (req, res, next) => {
     ];
   }
   const data = req.body;
+  console.log(req);
   logger.info(req.body);
 
   let dublicatedemail = await User.findOne({ email: data.email });
@@ -25,7 +26,7 @@ exports.NewUser = asynchandler(async (req, res, next) => {
     const newuser = new User(data);
     await newuser.save();
     logger.info("created email");
-    res.status(200).json({ message: "Created" });
+    res.status(200).json(newuser);
   } else {
     return next(new ApiError("this email is already taken", 403));
   }
@@ -49,7 +50,7 @@ exports.NewUserGoogle = asynchandler(async (req, res, next) => {
     const newuser = new User(data);
     await newuser.save();
     logger.info("created email");
-    res.status(200).json({ message: "Created" });
+    res.status(200).json(newuser);
   } else {
     return next(new ApiError("this email is already taken", 403));
   }
@@ -69,6 +70,7 @@ exports.login = asynchandler(async (req, res) => {
       httpOnly: true,
       //  maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
     });
+    console.log(res);
     res.status(200).send({ user });
   } catch (error) {
     logger.error(error.message);

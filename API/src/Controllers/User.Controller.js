@@ -48,6 +48,7 @@ exports.getloggeduser = asyncHandler(async (req, res, next) => {
   res.json({ user: userobj });
 });
 exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
   });

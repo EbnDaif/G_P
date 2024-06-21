@@ -46,6 +46,9 @@ const updateUserSchema = Joi.object({
   }),
   firstname: Joi.string(),
   lastname: Joi.string(),
+  phone: Joi.string(),
+  keywords: Joi.array(),
+  
   keywords: Joi.array().default([
     "meditation",
     "Mental health",

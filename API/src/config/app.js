@@ -1,38 +1,22 @@
 const express = require("express");
 const app = express();
-const ApiError = require("../utils/apiError");
-
 const cors = require("cors");
-const cookieparser = require("cookie-parser");
-/*const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};*/
+const cookieParser = require("cookie-parser");
 
-app.use(cookieparser());
+const corsOptions = {
+  origin: "http://localhost:5173", // Replace with your client URL
+  credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
 app.use("/GP", require("../Routers/Routers"));
 
 // Error handler middleware (must be placed at the end)
 const errorHandler = (err, req, res, next) => {
-  if (err instanceof ApiError) {
-    res.status(err.statuscode).json({ error: err.message });
-  } else {
-    res.status(500).json({ error: err.message });
-  }
+  res.status(500).json({ error: err.message });
 };
 app.use(errorHandler);
-
-// Example route handler with error throwing
-app.get("/", (req, res, next) => {
-  try {
-    res.send("Rourte '/' is accsesed");
-  } catch (err) {
-    console.log(err);
-    next(err); // Pass the error to the error handling middleware
-  }
-});
 
 module.exports = app;

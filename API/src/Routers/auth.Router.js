@@ -19,7 +19,6 @@ const { upload } = require("../middlewares/uploadimage");
 const router = require("express").Router();
 router.post(
   "/register",
-  upload.single("image"),
   validationMiddleware(NewUserSchema),
   NewUser
 );

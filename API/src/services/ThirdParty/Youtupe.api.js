@@ -18,6 +18,8 @@ async function searchVideos(keyword) {
 
     const videos = response.data.items.map((item) => ({
       title: item.snippet.title,
+      description: item.snippet.description,
+      thumbnail: item.snippet.thumbnails.default.url,
       videolink: `https://www.youtube.com/watch?v=${item?.id?.videoId}`,
       videoId: item.id.videoId,
     }));
