@@ -39,6 +39,18 @@ exports.updateuser = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ data: document });
 });
+exports.updateuserpassword = asyncHandler(async (req, res, next) => {
+    const user = await User.findByCredentials(
+      req.user.email,
+      req.body.password
+    );  if (!user) {
+    return next(new ApiError(`no User found with this Id${req.params.id}`));
+  }
+  User.findByIdAndUpdate(req.user._id, {
+    password:req.body.newPassword
+  })
+  res.status(200).json({ data: "password changed succesfully" });
+});
 exports.deleteuser = handler.deleteone(User);
 exports.getloggeduser = asyncHandler(async (req, res, next) => {
   const user = req.user;

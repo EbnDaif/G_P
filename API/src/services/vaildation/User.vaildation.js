@@ -90,6 +90,15 @@ const resetPasswordSchema = Joi.object({
     .min(8)
     .required(),
 });
+const updatePasswordSchema = Joi.object({
+  password: Joi.string().pattern(passwordRegex).required().messages({
+    "any.required": "Password is required.",
+    "string.empty": "Password must not be empty.",
+    "string.pattern.base":
+      "Password must contain at least 8 characters, including one digit, one lowercase letter, one uppercase letter, and one special character.",
+  }),
+  newPassword: Joi.string().pattern(passwordRegex).min(8).required(),
+});
 
 
 
@@ -101,5 +110,6 @@ module.exports = {
   logingoogleSchema: logingoogleSchema,
   updateUserSchema: updateUserSchema,
   forgetPasswordSchema: forgetPasswordSchema,
-  resetPasswordSchema:resetPasswordSchema
+  resetPasswordSchema: resetPasswordSchema,
+  updatePasswordSchema:updatePasswordSchema
 };

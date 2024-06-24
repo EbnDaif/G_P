@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { updateLoggedUserData, updateuser, getloggeduser, deleteLoggedUserData, deleteuser,getuser,getusers ,resetPassword,forgetPassword} = require("../Controllers/User.Controller")
+const { updateLoggedUserData, updateuser, getloggeduser, deleteLoggedUserData, deleteuser,getuser,getusers ,resetPassword,forgetPassword, updateuserpassword} = require("../Controllers/User.Controller")
 const {
   updateUserSchema,
   resetPasswordSchema,
-forgetPasswordSchema} = require("../services/vaildation/User.vaildation");
+forgetPasswordSchema,
+updatePasswordSchema} = require("../services/vaildation/User.vaildation");
 const { authantication, authorization } = require("../middlewares/auth");
 const validateObjectId = require("../middlewares/validateObjectIdMiddleware");
 const { validationMiddleware } = require("../middlewares/validator");
@@ -16,6 +17,12 @@ router.patch(
   authantication,
   validationMiddleware(updateUserSchema),
   updateLoggedUserData
+);
+router.patch(
+  "/changepassword",
+  authantication,
+  validationMiddleware(updatePasswordSchema),
+  updateuserpassword
 );
     router.post(
       "/forget-password",
