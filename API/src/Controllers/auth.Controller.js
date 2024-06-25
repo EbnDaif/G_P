@@ -17,7 +17,6 @@ exports.NewUser = asynchandler(async (req, res, next) => {
     ];
   }
   const data = req.body;
-  console.log(req);
   logger.info(req.body);
 
   let dublicatedemail = await User.findOne({ email: data.email });
@@ -70,7 +69,6 @@ exports.login = asynchandler(async (req, res) => {
       httpOnly: true,
       //  maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
     });
-    console.log(res);
     res.status(200).send({ user });
   } catch (error) {
     logger.error(error.message);
@@ -81,7 +79,6 @@ exports.login = asynchandler(async (req, res) => {
 exports.logingoogle = asynchandler(async (req, res) => {
   try {
     logger.info(req.body);
-console.log(req.body);
     const user = await User.findByUIDCredentials(
       req.body.email,
       req.body.UID
@@ -131,7 +128,6 @@ exports.registerUser = asynchandler(async (req, res, next) => {
 });
 
 exports.authenticateUser = async (req, res, next) => {
-  console.log(req.file);
   try {
     const detectedDescriptors = await fastapi.uploadImagesAndGetFeatureVectors(
       req.file

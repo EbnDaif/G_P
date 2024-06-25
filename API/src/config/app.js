@@ -5,8 +5,12 @@ const cookieParser = require("cookie-parser");
 
 const corsOptions = {
   origin: "http://localhost:5173", // Replace with your client URL
-  credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
+  credentials: true, 
 };
+  app.use((req, res, next) => {
+    console.log("Cookies:", req.cookies);
+    next();
+  });
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
