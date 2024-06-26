@@ -34,9 +34,5 @@ router.post(
   validationMiddleware(logingoogleSchema),
   logingoogle
 );
-router.post("/face/register", upload.single("image"), registerUser);
-
-router.post("/face/authenticate", similarity);
-//router.post("/face/authenticate", upload.single("image"),authenticateUser);
 router.post("/logout", logout);
 module.exports = router;
