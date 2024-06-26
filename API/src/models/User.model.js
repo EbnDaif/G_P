@@ -75,17 +75,20 @@ const UserSchema = mongoose.Schema({
     default: false,
   },
 });
-UserSchema.pre("save", async function () {
+UserSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcryptjs.hash(user.password, 8);
-  } 
-  
-  if ( user.isModified("UID")) {
-    user.UID = await bcryptjs.hash(user.UID, 8);
-  } 
+  }
 
+  if (user.isModified("UID")) {
+    user.UID = await bcryptjs.hash(user.UID, 8);
+  }
+
+  next();
 });
+
+
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
