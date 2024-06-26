@@ -11,10 +11,11 @@ const {newArticleValidation,updateArticleValidation,} = require("../services/vai
 router.post(
   "/createArticle",
   authorization,
-  upload.single("cover"),
-  validationMiddleware(newArticleValidation),
-  createArticle,
+  upload.single("cover"), // Middleware to handle single file upload for 'cover' field
+  validationMiddleware(newArticleValidation), // Middleware to validate parsed form data using Joi
+  createArticle // Route handler to create article
 );
+
 router.get("/getall", GetAllArticles);
 
 router.get("/get-one/:id", validateObjectId, getarticle);

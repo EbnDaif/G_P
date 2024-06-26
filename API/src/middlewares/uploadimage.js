@@ -1,57 +1,49 @@
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("./cloudinaryConfig");
 const { v4: uuidv4 } = require("uuid");
-const path = require("path");
-const fs = require("fs");
 
-const destinations = ["articles", "users"];
-
-function make_folders(dest) {
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest);
-    console.log(`Folder created at: ${dest}`);
-  } else {
-    console.log(`Folder already exists at: ${dest}`);
-  }
-}
-
-const storageEngine = multer.diskStorage({
-  destination: function (req, file, callback) {
-    let dest = "src/uploads/";
-    make_folders(dest);
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    let folder = "uploads";
     switch (req.baseUrl) {
       case "/GP/users":
-        dest = "src/uploads/users";
-        make_folders(dest);
+        folder = "uploads/users";
         break;
       case "/GP/articles":
-        dest = "src/uploads/articles";
-        make_folders(dest);
+        folder = "uploads/articles";
         break;
       default:
-        dest = "src/uploads/";
+        folder = "uploads";
     }
-    callback(null, dest);
-  },
 
-  filename: (req, file, callback) => {
-    let name = file.originalname.replace(" ", "_");
-    callback(null, `${Date.now()}--${uuidv4()}--${name}`);
+    const originalName = file.originalname.replace(" ", "_");
+    const publicId = `${Date.now()}--${uuidv4()}--${originalName}`;
+
+    return {
+      folder: folder,
+      public_id: publicId,
+      format: "png", // you can also set this dynamically if needed
+    };
   },
 });
 
-const checkFileType = function (file, callback) {
+const checkFileType = (file, callback) => {
   const fileTypes = /jpeg|jpg|png|gif|svg/;
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+  const extName = fileTypes.test(
+    file.originalname.split(".").pop().toLowerCase()
+  );
   const mimeType = fileTypes.test(file.mimetype);
   if (mimeType && extName) {
     return callback(null, true);
   } else {
-    callback("Error: You can Only Upload Images!!");
+    callback("Error: You can only upload images!");
   }
 };
 
 const upload = multer({
-  storage: storageEngine,
+  storage: storage,
   limits: { fileSize: 10000000 },
   fileFilter: (req, file, callback) => {
     checkFileType(file, callback);

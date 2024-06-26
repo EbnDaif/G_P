@@ -1,17 +1,17 @@
 const asyncHandler = require("express-async-handler");
 const Articles = require("../models/Articles.model");
 const handler = require("./actionHandler");
+const cloudinary = require("cloudinary");
 const ApiError = require("../utils/apiError");
 
 exports.GetAllArticles = handler.getall(Articles);
 exports.getarticle = handler.getone(Articles)
 exports.createArticle= asyncHandler(async (req, res,next) => {
 		if (req.file) {
-			req.body.cover = `/articles/${req.file.filename}`;
+			req.body.cover =  req.file.path ;
 	}
-	console.log(req.body.title);
+	console.log(req.file)
 	dublicatedarticle = await Articles.findOne({ title: req.body.title })
-	console.log(dublicatedarticle);
 	if (dublicatedarticle) {
             return next(new ApiError("dublicated article", 400));
   }
@@ -24,7 +24,7 @@ exports.createArticle= asyncHandler(async (req, res,next) => {
     });
 
 		if (!newArticle) {
-			
+
 			return next(new ApiError(`Something went wrong while create article`, 400));
 		}
 

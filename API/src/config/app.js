@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
+const ApiError = require("../utils/apiError");
+
 const cors = require("cors");
+const {handleCloudinaryCleanup}=require("../utils/handleCloudinaryCleanup")
 const cookieParser = require("cookie-parser");
 
 
@@ -17,8 +20,14 @@ app.use("/GP", require("../Routers/Routers"));
 app.options("*", cors(corsOptions));
 
 // Error handler middleware (must be placed at the end)
+
 const errorHandler = (err, req, res, next) => {
-  res.status(500).json({ error: err.message });
+  if (err instanceof ApiError) {
+      handleCloudinaryCleanup(req);
+    res.status(err.statuscode).json({ error: err.message });
+  } else {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 app.use(errorHandler);
 
