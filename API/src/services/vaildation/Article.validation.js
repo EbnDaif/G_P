@@ -23,7 +23,9 @@ const newArticleValidation = Joi.object({
   // publish_by: Joi.string()
   // 	.required()
   // 	.messages({ 'any.required': 'Please select the Instructor' }),
-
+  cover: Joi.string().required().messages({
+    "any.required": "Please Provide A Cover For This Article",
+  }),
   isPublished: Joi.boolean().required().messages({
     "any.required": "Please specify if you want to publish or draft",
   }),
