@@ -24,7 +24,7 @@ exports.NewUser = asynchandler(async (req, res, next) => {
     const newuser = new User(data);
     await newuser.save();
     logger.info("created email");
-    res.status(200).json(newuser);
+    res.status(201).json(newuser);
   } else {
     return next(new ApiError("this email is already taken", 403));
   }
@@ -48,12 +48,12 @@ exports.NewUserGoogle = asynchandler(async (req, res, next) => {
     const newuser = new User(data);
     await newuser.save();
     logger.info("created email");
-    res.status(200).json(newuser);
+    res.status(201).json(newuser);
   } else {
     return next(new ApiError("this email is already taken", 403));
   }
 });
-exports.login = asynchandler(async (req, res) => {
+exports.login = asynchandler(async (req, res,next) => {
   try {
     logger.info(req.body);
 
@@ -73,11 +73,10 @@ exports.login = asynchandler(async (req, res) => {
     res.status(200).send({ user });
   } catch (error) {
     logger.error(error.message);
-
-    res.status(401).send({ error: "Invalid credentials" });
+    return next(new ApiError("Invalid credentials", 401));
   }
 });
-exports.logingoogle = asynchandler(async (req, res) => {
+exports.logingoogle = asynchandler(async (req, res,next) => {
   try {
     logger.info(req.body);
     const user = await User.findByUIDCredentials(
@@ -96,7 +95,7 @@ exports.logingoogle = asynchandler(async (req, res) => {
   } catch (error) {
     logger.error(error.message);
 
-    res.status(401).send({ error: "Invalid credentials" });
+    return next(new ApiError("Invalid credentials", 401));
   }
 });
 
