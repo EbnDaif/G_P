@@ -13,6 +13,7 @@ const NewUserSchema = Joi.object({
     "motivation",
     "calm",
   ]),
+  profileimage: Joi.string(),
 
   password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
@@ -25,6 +26,8 @@ const NewUserSchema = Joi.object({
 });
 const NewUsergoogleSchema = Joi.object({
   firstname: Joi.string(),
+  profileimage: Joi.string(),
+
   lastname: Joi.string(),
   keywords: Joi.array().default([
     "meditation",
@@ -33,7 +36,6 @@ const NewUsergoogleSchema = Joi.object({
     "motivation",
     "calm",
   ]),
-
 
   UID: Joi.string().required(),
   email: Joi.string().email().required(),
@@ -48,7 +50,7 @@ const updateUserSchema = Joi.object({
   lastname: Joi.string(),
   phone: Joi.string(),
   keywords: Joi.array(),
-  
+  profileimage: Joi.string(),
   keywords: Joi.array().default([
     "meditation",
     "Mental health",
@@ -56,6 +58,7 @@ const updateUserSchema = Joi.object({
     "motivation",
     "calm",
   ]),
+  facialid:Joi.string(),
   preferance: Joi.array(),
   mobileNumber: Joi.number().integer().messages({
     "number.base": "Mobile number must be a valid integer.",
@@ -69,6 +72,7 @@ const loginSchema = Joi.object({
       "Password must contain at least 8 characters, including one digit, one lowercase letter, one uppercase letter, and one special character.",
   }),
   email: Joi.string().email().required(),
+  facialid:Joi.string()
 });
 const logingoogleSchema = Joi.object({
 

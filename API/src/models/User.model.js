@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
-const { string, array } = require("joi");
+const { string, array, types } = require("joi");
 const ApiError = require("../utils/apiError");
 const UserSchema = mongoose.Schema({
   firstname: {
@@ -29,7 +29,7 @@ const UserSchema = mongoose.Schema({
     minlength: 8,
   },
   UID: { type: String },
-  
+
   preferance: [{ type: String, trim: true }],
   profileimage: String,
   moood: [
@@ -44,6 +44,10 @@ const UserSchema = mongoose.Schema({
       },
     },
   ],
+  facialid: {
+    type: String,
+    unique: true
+  },
   keywords: [
     {
       type: String,
@@ -59,9 +63,9 @@ const UserSchema = mongoose.Schema({
       type: String,
     },
   ],
-  feature_vectors:  {
-        type: Array,
-    },
+  feature_vectors: {
+    type: Array,
+  },
   resetPasswordToken: {
     type: String,
     default: null,

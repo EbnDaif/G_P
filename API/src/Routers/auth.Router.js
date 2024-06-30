@@ -6,6 +6,7 @@ const {
   registerUser,
   similarity,
   NewUserGoogle,
+  loginfaceio,
 } = require("../Controllers/auth.Controller");
 const {
   NewUsergoogleSchema,
@@ -28,6 +29,7 @@ router.post(
   NewUserGoogle
 );
 router.post("/login", validationMiddleware(loginSchema), login);
+router.post("/loginfaceio", validationMiddleware(loginSchema), loginfaceio);
 
 router.post(
   "/logingoogle",

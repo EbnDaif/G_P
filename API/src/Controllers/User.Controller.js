@@ -10,30 +10,16 @@ exports.getusers = handler.getall(User);
 exports.getuser = handler.getone(User);
 exports.createuser = handler.createone(User);
 exports.updateuser = asyncHandler(async (req, res, next) => {
-  if (req.body.password) {
-    const document = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        age: req.body.age,
-        password: req.body.password,
-      },
-      { new: true }
-    );
-  } else {
-    const document = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        age: req.body.age,
-      },
-      { new: true }
-    );
-  }
+ if (req.file) {
+   req.body.profileImage = req.file.path;
+ }
+ console.log(req.body);
+
+  const document = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  
   if (!document) {
     return next(new ApiError(`no User found with this Id${req.params.id}`));
   }
@@ -63,7 +49,11 @@ exports.getloggeduser = asyncHandler(async (req, res, next) => {
   res.json({ user: userobj });
 });
 exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
+ if (req.file) {
+      req.body.profileImage = req.file.path;
+ }
   console.log(req.body);
+
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
   });

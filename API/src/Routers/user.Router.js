@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { upload } = require("../middlewares/uploadimage");
+
 const { updateLoggedUserData, updateuser, getloggeduser, deleteLoggedUserData, deleteuser,getuser,getusers ,resetPassword,forgetPassword, updateuserpassword} = require("../Controllers/User.Controller")
 const {
   updateUserSchema,
@@ -15,6 +17,8 @@ router.get("/getme", authantication, getloggeduser);
 router.patch(
   "/update-me",
   authantication,
+  upload.single("profileimage"),
+
   validationMiddleware(updateUserSchema),
   updateLoggedUserData
 );
@@ -34,7 +38,14 @@ router.post(
   validationMiddleware(resetPasswordSchema),
   resetPassword
 );
-router.patch("/update-one/:id", authorization, validateObjectId,updateuser)
+router.patch(
+  "/update-one/:id",
+  upload.single("profileimage"),
+  authorization,
+  validateObjectId,
+  validationMiddleware(updateUserSchema),
+  updateuser
+);
 router.delete("/delete-me", authantication, deleteLoggedUserData)
 router.delete("/delete-one/:id",authorization,validateObjectId,deleteuser)
 

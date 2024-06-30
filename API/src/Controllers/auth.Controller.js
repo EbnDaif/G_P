@@ -98,6 +98,25 @@ exports.logingoogle = asynchandler(async (req, res,next) => {
     return next(new ApiError("Invalid credentials", 401));
   }
 });
+exports.loginfaceio = asynchandler(async (req, res,next) => {
+  try {
+    logger.info(req.body);
+ const user =await User.findOne({ facialid:req.data.facialid });
+
+    const token = await user.generatetokens();
+
+    res.cookie("accessToken", `Bearer ${token}`, {
+      httpOnly: true,
+      secure: true, // Set to true if using HTTPS
+      sameSite: "None", //  maxAge: 1000 * 60 * 60 * 48, // 48 hours in milliseconds
+    });
+    res.status(200).send({ user });
+  } catch (error) {
+    logger.error(error.message);
+
+    return next(new ApiError("Invalid credentials", 401));
+  }
+});
 
 exports.logout = asynchandler(async (req, res) => {
   res.clearCookie("accessToken");
