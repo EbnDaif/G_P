@@ -114,7 +114,7 @@ exports.loginfaceio = asynchandler(async (req, res,next) => {
   } catch (error) {
     logger.error(error.message);
 
-    return next(new ApiError("Invalid credentials", 401));
+    return next(new ApiError("Invalid credentials no user with this face", 401));
   }
 });
 

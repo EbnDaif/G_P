@@ -74,6 +74,9 @@ const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   facialid:Joi.string()
 });
+const loginfaceSchema = Joi.object({
+  facialid:Joi.string()
+});
 const logingoogleSchema = Joi.object({
 
   email: Joi.string().email().required(),
@@ -110,5 +113,6 @@ module.exports = {
   updateUserSchema: updateUserSchema,
   forgetPasswordSchema: forgetPasswordSchema,
   resetPasswordSchema: resetPasswordSchema,
+  loginfaceSchema:loginfaceSchema,
   updatePasswordSchema:updatePasswordSchema
 };

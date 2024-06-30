@@ -11,6 +11,7 @@ const {
 const {
   NewUsergoogleSchema,
   logingoogleSchema,
+  loginfaceSchema,
   NewUserSchema,
   loginSchema,
 } = require("../services/vaildation/User.vaildation");
@@ -29,7 +30,7 @@ router.post(
   NewUserGoogle
 );
 router.post("/login", validationMiddleware(loginSchema), login);
-router.post("/loginfaceio", validationMiddleware(loginSchema), loginfaceio);
+router.post("/loginfaceio", validationMiddleware(loginfaceSchema), loginfaceio);
 
 router.post(
   "/logingoogle",
