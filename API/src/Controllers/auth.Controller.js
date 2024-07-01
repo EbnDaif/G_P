@@ -100,8 +100,7 @@ exports.logingoogle = asynchandler(async (req, res,next) => {
 });
 exports.loginfaceio = asynchandler(async (req, res,next) => {
   try {
-    logger.info(req.body);
- const user =await User.findOne({ facialid:req.data.facialid });
+ const user =await User.findOne(req.data );
 
     const token = await user.generatetokens();
 
