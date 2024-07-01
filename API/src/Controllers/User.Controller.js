@@ -23,6 +23,7 @@ exports.updateuser = asyncHandler(async (req, res, next) => {
   if (!document) {
     return next(new ApiError(`no User found with this Id${req.params.id}`));
   }
+  document.save();
   res.status(200).json({ data: document });
 });
 exports.updateuserpassword = asyncHandler(async (req, res, next) => {
@@ -49,17 +50,24 @@ exports.getloggeduser = asyncHandler(async (req, res, next) => {
   res.json({ user: userobj });
 });
 exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
- if (req.file) {
-      req.body.profileImage = req.file.path;
- }
+  if (req.file) {
+    req.body.profileimage = req.file.path;
+  }
+
   console.log(req.body);
 
-  const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
-    new: true,
-  });
+  const user = await User.findOne({ _id: req.user._id });
 
-  res.status(200).json({ data: updatedUser });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  Object.assign(user, req.body);
+  await user.save();
+
+  res.status(200).json({ updatedUser: user });
 });
+
 exports.deleteLoggedUserData = asyncHandler(async (req, res, next) => {
   await User.findByIdAndDelete(req.user._id);
 

@@ -15,7 +15,12 @@ exports.deleteone=(Model)=>asynchandler(
     }
 )
 exports.updateone = (Model) => asynchandler(async (req, res, next) => {
-            const { id } = req.params;
+    const { id } = req.params;
+    if (req.file)
+    {
+            req.body.cover = req.file.path;
+    }
+    console.log(req.body);
         document = await Model.findByIdAndUpdate(id, req.body,{new:true});
    if (!document) {
       return next(new ApiError(`No document for this id ${id}`, 404));

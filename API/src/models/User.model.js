@@ -46,7 +46,6 @@ const UserSchema = mongoose.Schema({
   ],
   facialid: {
     type: String,
-    unique: true
   },
   keywords: [
     {
@@ -63,9 +62,6 @@ const UserSchema = mongoose.Schema({
       type: String,
     },
   ],
-  feature_vectors: {
-    type: Array,
-  },
   resetPasswordToken: {
     type: String,
     default: null,

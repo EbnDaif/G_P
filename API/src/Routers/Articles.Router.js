@@ -23,6 +23,8 @@ router.get("/get-one/:id", validateObjectId, getarticle);
 router.patch(
   "/update/:id",
   authorization,
+  upload.single("cover"), // Middleware to handle single file upload for 'cover' field
+
   validationMiddleware(updateArticleValidation),
   updatearticle
 );

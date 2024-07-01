@@ -40,8 +40,6 @@
    },
  });
 
- articleSchema.pre("findOneAndUpdate", deleteUploadedFile);
- articleSchema.pre("findOneAndDelete", deleteUploadedFile);
 
  const Article = mongoose.model("Article", articleSchema);
 

@@ -26,7 +26,8 @@ const errorHandler = (err, req, res, next) => {
       handleCloudinaryCleanup(req);
     res.status(err.statuscode).json({ error: err.message });
   } else {
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log(err);
+    res.status(500).json({ error: err.message });
   }
 };
 
